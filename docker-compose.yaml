@@ -1,0 +1,16 @@
+services:
+  backend:
+    container_name: project-manager-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: air
+    environment:
+      - GOFLAGS=-tags=local
+      - PORT=8080
+      - LOG_LEVEL=debug
