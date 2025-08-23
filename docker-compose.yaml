@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   backend:
     container_name: project-manager-backend
@@ -14,3 +16,26 @@ services:
       - GOFLAGS=-tags=local
       - PORT=8080
       - LOG_LEVEL=debug
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=taskuser
+      - DB_PASSWORD=taskpass
+      - DB_NAME=taskdb
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: project-manager-db
+    restart: always
+    environment:
+      POSTGRES_USER: taskuser
+      POSTGRES_PASSWORD: taskpass
+      POSTGRES_DB: taskdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
