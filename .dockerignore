@@ -1,0 +1,15 @@
+.git
+.github
+.infra
+db
+**/*_test.go
+testdata
+mock
+tmp
+vendor
+.gitignore
+.dockerignore
+kabu-community-campaign
+Dockerfile
+docker-compose.yaml
+README.md
