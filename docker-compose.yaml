@@ -8,9 +8,47 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
+      - /app/tmp
     working_dir: /app
-    command: air
     environment:
       - GOFLAGS=-tags=local
       - PORT=8080
       - LOG_LEVEL=debug
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=taskuser
+      - DB_PASSWORD=taskpass
+      - DB_NAME=taskdb
+      - CGO_ENABLED=0
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: postgres:16
+    container_name: project-manager-db
+    restart: always
+    environment:
+      POSTGRES_USER: taskuser
+      POSTGRES_PASSWORD: taskpass
+      POSTGRES_DB: taskdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U taskuser -d taskdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
